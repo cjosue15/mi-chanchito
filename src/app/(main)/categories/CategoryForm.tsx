@@ -17,24 +17,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Category } from '@/infraestructure/interfaces/category/category.interface';
+import {
+  Category,
+  CategoryWithId,
+} from '@/infraestructure/interfaces/category/category.interface';
 import { categorySchema } from '@/infraestructure/interfaces/category/category.schema';
 import { categoryIcons } from '@/lib/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LucideLoader } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
 interface CategoryFormProps {
-  // editingCategory?: Category;
-  // setIsDialogOpen: (isOpen: boolean) => void;
   submitValues: (category: Category) => void;
+  editingCategory?: CategoryWithId;
+  isLoading?: boolean;
 }
 
-function CategoryForm({ submitValues }: CategoryFormProps) {
+function CategoryForm({
+  submitValues,
+  isLoading,
+  editingCategory,
+}: CategoryFormProps) {
   const form = useForm<Category>({
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: '',
       type: 'expense',
+    },
+    values: {
+      name: editingCategory?.name || '',
+      type: editingCategory?.type || 'expense',
+      icon: editingCategory?.icon || '',
     },
   });
 
@@ -106,7 +119,7 @@ function CategoryForm({ submitValues }: CategoryFormProps) {
           )}
         />
 
-        <div className='text-right'>
+        <div className='flex justify-end'>
           <Button
             variant='outline'
             type='button'
@@ -115,9 +128,9 @@ function CategoryForm({ submitValues }: CategoryFormProps) {
           >
             Cancelar
           </Button>
-          <Button type='submit'>
-            {/* {editingCategory ? 'Guardar cambios' : 'Crear categoría'} */}
-            Guardar cambios
+          <Button type='submit' disabled={isLoading}>
+            {isLoading && <LucideLoader size={16} className='animate-spin' />}
+            {editingCategory ? 'Guardar cambios' : 'Crear categoría'}
           </Button>
         </div>
       </form>
