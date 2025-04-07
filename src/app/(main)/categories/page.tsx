@@ -12,11 +12,11 @@ import {
 } from '@/components/ui/table';
 import { useCategory } from '@/hooks/category/useCategory';
 import { CategoryWithId } from '@/infraestructure/interfaces/category/category.interface';
-import { LucideEdit, LucideTrash } from 'lucide-react';
+import { LucideEdit } from 'lucide-react';
 import { useState } from 'react';
-import { CategoryDialog } from './CategoryDialog';
-import { CategoryAlert } from './CategoryAlert';
 import { toast } from 'sonner';
+import { CategoryAlert } from './CategoryAlert';
+import { CategoryDialog } from './CategoryDialog';
 
 function CategoriesPage() {
   const { getCategoriesQuery, deleteCategoryMutation } = useCategory();
