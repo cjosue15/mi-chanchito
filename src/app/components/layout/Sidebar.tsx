@@ -4,6 +4,7 @@ import {
   LucideArrowRightLeft,
   LucideChartPie,
   LucideHouse,
+  LucideSettings,
   LucideWallet,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -36,6 +37,11 @@ const MENU: MenuItem[] = [
     label: 'Categorías',
     path: '/categories',
     icon: <LucideChartPie />,
+  },
+  {
+    label: 'Ajustes',
+    path: '/settings',
+    icon: <LucideSettings />,
   },
 ];
 
