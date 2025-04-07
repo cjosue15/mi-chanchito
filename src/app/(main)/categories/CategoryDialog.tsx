@@ -98,6 +98,7 @@ export function CategoryDialog({
             createCategoryMutation.isPending || updateCategoryMutation.isPending
           }
           editingCategory={editingCategory}
+          closeDialog={() => setIsOpen(false)}
         />
       </DialogContent>
     </Dialog>

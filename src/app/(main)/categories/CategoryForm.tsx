@@ -31,12 +31,14 @@ interface CategoryFormProps {
   submitValues: (category: Category) => void;
   editingCategory?: CategoryWithId;
   isLoading?: boolean;
+  closeDialog: () => void;
 }
 
 function CategoryForm({
   submitValues,
   isLoading,
   editingCategory,
+  closeDialog,
 }: CategoryFormProps) {
   const form = useForm<Category>({
     resolver: zodResolver(categorySchema),
@@ -124,7 +126,7 @@ function CategoryForm({
             variant='outline'
             type='button'
             className='mr-4'
-            // onClick={() => setIsDialogOpen(false)}
+            onClick={closeDialog}
           >
             Cancelar
           </Button>
