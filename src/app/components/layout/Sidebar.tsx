@@ -1,49 +1,9 @@
 'use client';
 
-import {
-  LucideArrowRightLeft,
-  LucideChartPie,
-  LucideHouse,
-  LucideSettings,
-  LucideWallet,
-} from 'lucide-react';
+import { MENU } from '@/lib/menu';
+import { LucideWallet } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React from 'react';
-
-interface MenuItem {
-  label: string;
-  path: string;
-  icon?: React.ReactNode;
-}
-
-const MENU: MenuItem[] = [
-  {
-    label: 'Dashboard',
-    path: '/dashboard',
-    icon: <LucideHouse />,
-  },
-  {
-    label: 'Transacciones',
-    path: '/transactions',
-    icon: <LucideArrowRightLeft />,
-  },
-  {
-    label: 'Presupuestos',
-    path: '/budgets',
-    icon: <LucideChartPie />,
-  },
-  {
-    label: 'Categorías',
-    path: '/categories',
-    icon: <LucideChartPie />,
-  },
-  {
-    label: 'Ajustes',
-    path: '/settings',
-    icon: <LucideSettings />,
-  },
-];
 
 function Sidebar() {
   const pathname = usePathname();
@@ -66,8 +26,8 @@ function Sidebar() {
                   href={item.path}
                   className={`flex items-center space-x-3 p-3 rounded-xl transition-colors justify-cente ${
                     isActive
-                      ? 'bg-black text-white'
-                      : 'text-white hover:bg-black hover:text-white'
+                      ? 'bg-white text-primary'
+                      : 'text-white hover:bg-white hover:text-primary'
                   }`}
                 >
                   {item.icon}
