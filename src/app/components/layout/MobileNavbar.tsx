@@ -7,7 +7,7 @@ function MobileNavbar() {
   const pathname = usePathname();
 
   return (
-    <div className='md:hidden fixed bottom-0 left-0 right-0 bg-white border-t p-3 z-10'>
+    <div className='md:hidden fixed bottom-0 left-0 right-0 bg-white border-t p-2 z-10'>
       <div className='flex justify-between items-center'>
         {MENU.map((item, index) => {
           const isActive = pathname === item.path;
