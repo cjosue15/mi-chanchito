@@ -27,8 +27,8 @@ function MainLayout({
       {!isMobile ? <Sidebar /> : <MobileNavbar />}
 
       <main
-        className={`p-8 flex-1 overflow-auto ${
-          !isMobile ? 'h-screen' : 'h-[calc(100vh-80px)]'
+        className={`p-4 md:p-8 flex-1 overflow-auto bg-background ${
+          !isMobile ? 'h-screen' : 'h-[calc(100dvh-80px)]'
         }`}
       >
         {children}
