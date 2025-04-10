@@ -26,6 +26,7 @@ interface DrawerDialogProps extends PropsWithChildren {
   trigger: ReactNode;
   open: boolean;
   setOpen: (open: boolean) => void;
+  className?: string;
 }
 
 function DrawerDialog({
@@ -35,13 +36,16 @@ function DrawerDialog({
   trigger,
   open,
   setOpen,
+  className,
 }: DrawerDialogProps) {
   const isMobile = useIsMobile();
 
   if (!isMobile) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>{trigger}</DialogTrigger>
+        <DialogTrigger className={className} asChild>
+          {trigger}
+        </DialogTrigger>
         <DialogContent className='sm:max-w-[425px]'>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
@@ -55,7 +59,9 @@ function DrawerDialog({
 
   return (
     <Drawer autoFocus={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+      <DrawerTrigger className={className} asChild>
+        {trigger}
+      </DrawerTrigger>
       <DrawerContent className='p-4'>
         <DrawerHeader className='text-left'>
           <DrawerTitle>{title}</DrawerTitle>
