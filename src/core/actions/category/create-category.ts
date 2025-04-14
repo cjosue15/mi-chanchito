@@ -9,6 +9,7 @@ export const createCategory = async (
       name: category.name,
       type: category.type,
       icon: category.icon,
+      color: category.color,
       user_id: category.userId,
     });
 

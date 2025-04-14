@@ -31,6 +31,8 @@ const Transactions = () => {
   };
 
   const transactions = getTransactionsQuery.data ?? [];
+  const isLoading = getTransactionsQuery.isLoading;
+  const isError = getTransactionsQuery.isError;
 
   const filteredTransactions = transactions.filter((transaction) => {
     if (activeTab === 'income') return transaction.type === 'income';
@@ -54,8 +56,6 @@ const Transactions = () => {
         </p>
       </div>
 
-      {/* <Card className='shadow-card'>
-        <CardContent> */}
       <div className='flex items-start justify-between mb-4'>
         <Tabs defaultValue='all' value={activeTab} onValueChange={setActiveTab}>
           <TabsList className='grid grid-cols-3 w-full max-w-xs'>
@@ -148,13 +148,29 @@ const Transactions = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sortedTransactions.length === 0 ? (
+            {isLoading && (
+              <TableRow>
+                <TableCell colSpan={4} className='text-center py-8'>
+                  Cargando...
+                </TableCell>
+              </TableRow>
+            )}
+            {isError && (
+              <TableRow>
+                <TableCell colSpan={4} className='text-center py-8'>
+                  Error al cargar las transacciones
+                </TableCell>
+              </TableRow>
+            )}
+            {!isLoading && !isError && sortedTransactions.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} className='text-center py-8'>
                   No hay transacciones para mostrar
                 </TableCell>
               </TableRow>
             ) : (
+              !isLoading &&
+              !isError &&
               sortedTransactions.map((transaction) => (
                 <TableRow key={transaction.id}>
                   <TableCell>
