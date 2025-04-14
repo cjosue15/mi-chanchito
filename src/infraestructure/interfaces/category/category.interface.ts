@@ -11,4 +11,5 @@ export interface CategoryTotal {
   id: string;
   name: string;
   total: number;
+  color: string;
 }
