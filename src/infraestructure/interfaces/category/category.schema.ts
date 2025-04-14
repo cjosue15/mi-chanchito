@@ -11,5 +11,8 @@ export const categorySchema = z.object({
     .min(1, {
       message: 'El icono es obligatorio.',
     }),
+  color: z.string().min(1, {
+    message: 'El color es obligatorio.',
+  }),
   type: z.enum(['income', 'expense']),
 });

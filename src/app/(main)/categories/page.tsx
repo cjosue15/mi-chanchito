@@ -67,6 +67,7 @@ function CategoriesPage() {
               <TableRow>
                 <TableHead>Icono</TableHead>
                 <TableHead>Nombre</TableHead>
+                <TableHead>Color</TableHead>
                 <TableHead className='text-right'>Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -77,6 +78,17 @@ function CategoriesPage() {
                     {category.icon}
                   </TableCell>
                   <TableCell>{category.name}</TableCell>
+                  <TableCell>
+                    <div className='flex items-center'>
+                      <div
+                        className='h-4 w-4 rounded-full mr-2'
+                        style={{ backgroundColor: category.color }}
+                      />
+                      <span className='text-sm text-muted-foreground'>
+                        {category.color}
+                      </span>
+                    </div>
+                  </TableCell>
                   <TableCell className='text-right'>
                     <Button
                       variant='ghost'
@@ -117,6 +129,7 @@ function CategoriesPage() {
               <TableRow>
                 <TableHead>Icono</TableHead>
                 <TableHead>Nombre</TableHead>
+                <TableHead>Color</TableHead>
                 <TableHead className='text-right'>Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -127,6 +140,17 @@ function CategoriesPage() {
                     {category.icon}
                   </TableCell>
                   <TableCell>{category.name}</TableCell>
+                  <TableCell>
+                    <div className='flex items-center'>
+                      <div
+                        className='h-4 w-4 rounded-full mr-2'
+                        style={{ backgroundColor: category.color }}
+                      />
+                      <span className='text-sm text-muted-foreground'>
+                        {category.color}
+                      </span>
+                    </div>
+                  </TableCell>
                   <TableCell className='text-right'>
                     <Button
                       variant='ghost'

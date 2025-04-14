@@ -1,5 +1,6 @@
 'use client';
 
+import ColorPicker from '@/app/components/ColorPicker';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -45,11 +46,14 @@ function CategoryForm({
     defaultValues: {
       name: '',
       type: 'expense',
+      icon: '',
+      color: undefined,
     },
     values: {
       name: editingCategory?.name || '',
       type: editingCategory?.type || 'expense',
       icon: editingCategory?.icon || '',
+      color: editingCategory?.color || '',
     },
   });
 
@@ -116,6 +120,20 @@ function CategoryForm({
                   ))}
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name='color'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Color</FormLabel>
+              <FormControl>
+                <ColorPicker value={field.value} onChange={field.onChange} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
