@@ -58,7 +58,7 @@ function DrawerDialog({
   }
 
   return (
-    <Drawer autoFocus={open} onOpenChange={setOpen}>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger className={className} asChild>
         {trigger}
       </DrawerTrigger>
