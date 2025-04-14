@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Period } from '@/core/actions/dashboard/get-balance';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Calendar as CalendarIcon, ChevronDown } from 'lucide-react';
@@ -24,12 +25,16 @@ export type DateRange = {
 
 type DateRangeFilterProps = {
   dateRange: DateRange | undefined;
-  onDateRangeChange: (range: DateRange | undefined) => void;
+  onDateRangeChange: (range: DateRange | undefined, period?: Period) => void;
+  period?: Period;
+  setPeriod: (period: Period) => void;
 };
 
 const DateRangeFilter = ({
   dateRange,
   onDateRangeChange,
+  period,
+  setPeriod,
 }: DateRangeFilterProps) => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [localDateRange, setLocalDateRange] = useState<DateRange | undefined>(
@@ -57,7 +62,7 @@ const DateRangeFilter = ({
   // Get last 3 months range
   const getLast3Months = () => {
     const today = new Date();
-    const end = new Date();
+    const end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
     const start = new Date(today.getFullYear(), today.getMonth() - 2, 1);
 
     return { from: start, to: end };
@@ -73,8 +78,13 @@ const DateRangeFilter = ({
   };
 
   // Handle preset selection
-  const handlePresetSelect = (value: string) => {
+  const handlePresetSelect = (value: Period) => {
     let newRange;
+
+    if (value === 'custom') {
+      setIsCalendarOpen(true);
+      return;
+    }
 
     switch (value) {
       case 'current-month':
@@ -93,7 +103,8 @@ const DateRangeFilter = ({
         newRange = getCurrentMonth();
     }
 
-    onDateRangeChange(newRange);
+    setPeriod(value as Period);
+    onDateRangeChange(newRange, value as Period);
     setLocalDateRange(newRange);
     setIsCalendarOpen(false);
   };
@@ -103,18 +114,18 @@ const DateRangeFilter = ({
   ) => {
     if (!range) {
       setLocalDateRange(undefined);
-      onDateRangeChange(undefined);
+      onDateRangeChange(undefined, undefined);
       return;
     }
 
     const newRange = { from: range.from, to: range.to };
     setLocalDateRange(newRange);
-    onDateRangeChange(newRange);
+    onDateRangeChange(newRange, 'custom');
   };
 
   return (
     <div className='flex flex-col md:flex-row items-center gap-2'>
-      <Select onValueChange={handlePresetSelect}>
+      <Select value={period} onValueChange={handlePresetSelect}>
         <SelectTrigger className='w-[180px] h-9 bg-white'>
           <SelectValue placeholder='Filtrar por período' />
         </SelectTrigger>
@@ -123,6 +134,7 @@ const DateRangeFilter = ({
           <SelectItem value='previous-month'>Mes anterior</SelectItem>
           <SelectItem value='last-3-months'>Últimos 3 meses</SelectItem>
           <SelectItem value='current-year'>Año actual</SelectItem>
+          <SelectItem value='custom'>Custom</SelectItem>
         </SelectContent>
       </Select>
 

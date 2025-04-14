@@ -1,5 +1,5 @@
+import { DateTimePickerForm } from '@/app/components/DatePicker';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
   FormControl,
@@ -9,11 +9,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -27,8 +22,7 @@ import { CategoryWithId } from '@/infraestructure/interfaces/category/category.i
 import { cn } from '@/lib/utils';
 import { useAuthContext } from '@/providers/AuthProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
-import { CalendarIcon, Loader, Minus, Plus } from 'lucide-react';
+import { Loader, Minus, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -67,7 +61,7 @@ function NewTransactionForm({ onClose }: { onClose: () => void }) {
       title: '',
       amount: undefined,
       category: '',
-      date: undefined,
+      date: new Date(),
       type: 'expense',
     },
   });
@@ -213,34 +207,10 @@ function NewTransactionForm({ onClose }: { onClose: () => void }) {
           render={({ field }) => (
             <FormItem className='flex flex-col'>
               <FormLabel>Fecha</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={'outline'}
-                      className={cn(
-                        'w-full pl-3 text-left font-normal',
-                        !field.value && 'text-muted-foreground'
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, 'dd/MM/yyyy')
-                      ) : (
-                        <span>Selecciona la fecha</span>
-                      )}
-                      <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className='w-auto p-0' align='start'>
-                  <Calendar
-                    mode='single'
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    className='relative z-[1000px]'
-                  />
-                </PopoverContent>
-              </Popover>
+              <DateTimePickerForm
+                selectedDate={field.value}
+                onDateChange={field.onChange}
+              />
 
               <FormMessage />
             </FormItem>
