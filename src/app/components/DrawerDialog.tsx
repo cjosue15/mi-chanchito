@@ -58,7 +58,7 @@ function DrawerDialog({
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer autoFocus={open} open={open} onOpenChange={setOpen}>
       <DrawerTrigger className={className} asChild>
         {trigger}
       </DrawerTrigger>
@@ -68,11 +68,6 @@ function DrawerDialog({
           <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
         {children}
-        <DrawerFooter className='pt-2'>
-          <DrawerClose asChild>
-            <Button variant='outline'>Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );
