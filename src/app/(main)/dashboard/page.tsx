@@ -70,7 +70,7 @@ function DashboardPage() {
           setOpen={setIsOpen}
           trigger={
             <Button
-              className={`rounded-full cursor-pointer ${
+              className={`rounded-full cursor-pointer relative z-10 ${
                 isMobile ? 'fixed bottom-[100px] right-4 size-16' : ''
               } `}
               onClick={() => setIsOpen(true)}

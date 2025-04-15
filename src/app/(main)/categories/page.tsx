@@ -12,14 +12,20 @@ import {
 } from '@/components/ui/table';
 import { useCategory } from '@/hooks/category/useCategory';
 import { CategoryWithId } from '@/infraestructure/interfaces/category/category.interface';
-import { LucideEdit } from 'lucide-react';
+import { LucideEdit, LucidePlus } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { CategoryAlert } from './CategoryAlert';
 import { CategoryDialog } from './CategoryDialog';
+import DrawerDialog from '@/app/components/DrawerDialog';
+import { useIsMobile } from '@/hooks/useMobile';
 
 function CategoriesPage() {
   const { getCategoriesQuery, deleteCategoryMutation } = useCategory();
+
+  const isMobile = useIsMobile();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const { data, isLoading } = getCategoriesQuery;
 
@@ -28,6 +34,7 @@ function CategoriesPage() {
   );
 
   const handleEditCategory = (category: CategoryWithId) => {
+    setIsOpen(true);
     setCategory({ ...category });
   };
 
@@ -50,10 +57,35 @@ function CategoriesPage() {
         title='Categorías'
         subtitle='Administra las categorías para tus transacciones'
       >
-        <CategoryDialog
-          editingCategory={category}
-          onClose={() => setCategory(undefined)}
-        />
+        <DrawerDialog
+          title={category ? 'Editar categoría' : 'Crear nueva categoría'}
+          description={
+            !category
+              ? 'Crea una nueva categoría para tus transacciones.'
+              : 'Modifica los detalles de la categoría existente.'
+          }
+          open={isOpen}
+          setOpen={setIsOpen}
+          trigger={
+            <Button
+              className={`rounded-full cursor-pointer relative z-10 ${
+                isMobile ? 'fixed bottom-[100px] right-4 size-16' : ''
+              } `}
+              onClick={() => setIsOpen(true)}
+            >
+              <LucidePlus className={`${isMobile ? 'size-8' : 'size-4'}`} />
+              {!isMobile && 'Nueva Categoría'}
+            </Button>
+          }
+        >
+          <CategoryDialog
+            editingCategory={category}
+            onClose={() => {
+              setCategory(undefined);
+              setIsOpen(false);
+            }}
+          />
+        </DrawerDialog>
       </HeaderPage>
 
       <Card className='my-8'>
