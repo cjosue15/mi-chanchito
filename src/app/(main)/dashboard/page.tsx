@@ -13,6 +13,7 @@ import DateRangeFilter, { DateRange } from '../../components/DateRangeFilter';
 import ExpensePieChart from './ExpensePieChart';
 import NewTransactionForm from './NewTransactionForm';
 import StatCard from './StatCard';
+import { ExpenseLineChart } from './ExpenseLineChart';
 
 function DashboardPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +36,8 @@ function DashboardPage() {
   const to =
     dateRange && dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined;
 
-  const { getBalanceQuery, getExpenseCategoriesQuery } = useDashboard(from, to);
+  const { getBalanceQuery, getExpenseCategoriesQuery, getDailyExpensesQuery } =
+    useDashboard(from, to);
 
   const { balance, incomes, expenses } = getBalanceQuery.data ?? {
     balance: 0,
@@ -44,6 +46,8 @@ function DashboardPage() {
   };
 
   const categories = getExpenseCategoriesQuery.data;
+
+  const dailyExpenses = getDailyExpensesQuery.data ?? [];
 
   const handleDateRangeChange = (
     newRange: DateRange | undefined,
@@ -112,11 +116,13 @@ function DashboardPage() {
         </div>
 
         <div>
-          <ExpensePieChart
-            categories={categories ?? []}
-            isLoading={getExpenseCategoriesQuery.isLoading}
-          />
-          {/* <ExpenseLineChart /> */}
+          <div className='mb-6'>
+            <ExpensePieChart
+              categories={categories ?? []}
+              isLoading={getExpenseCategoriesQuery.isLoading}
+            />
+          </div>
+          <ExpenseLineChart data={dailyExpenses} />
         </div>
       </div>
     </div>
