@@ -1,11 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
   Table,
   TableBody,
   TableCell,
@@ -14,14 +9,34 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Period } from '@/core/actions/dashboard/get-balance';
 import { useTransaction } from '@/hooks/transaction/useTransaction';
 import { formatWithLocale } from '@/lib/date';
 import { cn } from '@/lib/utils';
-import { ArrowUpDown, Calendar, Filter, Tag } from 'lucide-react';
+import { ArrowUpDown } from 'lucide-react';
 import { useState } from 'react';
+import DateRangeFilter, { DateRange } from '../../components/DateRangeFilter';
+import { format } from 'date-fns';
 
 const Transactions = () => {
-  const { getTransactionsQuery } = useTransaction();
+  const [period, setPeriod] = useState<Period | undefined>('current-month');
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
+    const today = new Date();
+    return {
+      from: new Date(today.getFullYear(), today.getMonth(), 1),
+      to: new Date(today.getFullYear(), today.getMonth() + 1, 0),
+    };
+  });
+
+  const from =
+    dateRange && dateRange.from
+      ? format(dateRange.from, 'yyyy-MM-dd')
+      : undefined;
+  const to =
+    dateRange && dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined;
+
+  const { getTransactionsQuery } = useTransaction(from, to);
+
   const [activeTab, setActiveTab] = useState('all');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
@@ -56,7 +71,7 @@ const Transactions = () => {
         </p>
       </div>
 
-      <div className='flex items-start justify-between mb-4'>
+      <div className='flex items-center justify-between mb-4'>
         <Tabs defaultValue='all' value={activeTab} onValueChange={setActiveTab}>
           <TabsList className='grid grid-cols-3 w-full max-w-xs'>
             <TabsTrigger value='all'>Todos</TabsTrigger>
@@ -65,64 +80,7 @@ const Transactions = () => {
           </TabsList>
         </Tabs>
 
-        <div className='flex flex-col sm:flex-row gap-2 mt-4 sm:mt-0'>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant='outline' size='sm' className='gap-1'>
-                <Filter size={16} />
-                <span className='hidden sm:inline'>Filtrar</span>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className='w-56 p-4'>
-              <div className='space-y-2'>
-                <h4 className='font-medium text-sm'>Filtrar por</h4>
-                <div className='pt-2 space-y-4'>
-                  <div>
-                    <div className='flex items-center gap-2 mb-2'>
-                      <Calendar size={16} />
-                      <span className='text-sm font-medium'>Fecha</span>
-                    </div>
-                    <div className='grid grid-cols-2 gap-2'>
-                      <Button size='sm' variant='outline' className='text-xs'>
-                        Esta semana
-                      </Button>
-                      <Button size='sm' variant='outline' className='text-xs'>
-                        Este mes
-                      </Button>
-                      <Button size='sm' variant='outline' className='text-xs'>
-                        Último mes
-                      </Button>
-                      <Button size='sm' variant='outline' className='text-xs'>
-                        Este año
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className='flex items-center gap-2 mb-2'>
-                      <Tag size={16} />
-                      <span className='text-sm font-medium'>Categoría</span>
-                    </div>
-                    <div className='grid grid-cols-2 gap-2'>
-                      <Button size='sm' variant='outline' className='text-xs'>
-                        Alimentación
-                      </Button>
-                      <Button size='sm' variant='outline' className='text-xs'>
-                        Transporte
-                      </Button>
-                      <Button size='sm' variant='outline' className='text-xs'>
-                        Hogar
-                      </Button>
-                      <Button size='sm' variant='outline' className='text-xs'>
-                        Entretenimiento
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
-
+        <div className='flex flex-row gap-2'>
           <Button
             variant='outline'
             size='sm'
@@ -135,6 +93,15 @@ const Transactions = () => {
             </span>
           </Button>
         </div>
+      </div>
+
+      <div className='mb-4'>
+        <DateRangeFilter
+          period={period}
+          setPeriod={setPeriod}
+          dateRange={dateRange}
+          onDateRangeChange={setDateRange}
+        />
       </div>
 
       <div className='rounded-lg border overflow-hidden'>
