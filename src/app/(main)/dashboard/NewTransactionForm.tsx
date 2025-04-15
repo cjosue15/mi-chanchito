@@ -19,6 +19,7 @@ import {
 import { useCategory } from '@/hooks/category/useCategory';
 import { useTransaction } from '@/hooks/transaction/useTransaction';
 import { CategoryWithId } from '@/infraestructure/interfaces/category/category.interface';
+import { Transaction } from '@/infraestructure/interfaces/transaction/transaction.interface';
 import { cn } from '@/lib/utils';
 import { useAuthContext } from '@/providers/AuthProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -46,7 +47,13 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-function NewTransactionForm({ onClose }: { onClose: () => void }) {
+function NewTransactionForm({
+  onClose,
+  transaction,
+}: {
+  onClose: () => void;
+  transaction?: Transaction;
+}) {
   const { user } = useAuthContext();
   const { getCategoriesQuery } = useCategory();
   const { createTransactionMutation } = useTransaction();
@@ -69,15 +76,35 @@ function NewTransactionForm({ onClose }: { onClose: () => void }) {
   const type = form.watch('type');
 
   useEffect(() => {
+    if (transaction) {
+      form.reset({
+        title: transaction.note,
+        amount: transaction.amount,
+        category: transaction.category.id,
+        date: new Date(transaction.date),
+        type: transaction.type,
+      });
+    }
+  }, [transaction, form]);
+
+  useEffect(() => {
     const data = getCategoriesQuery.data;
+
+    console.log(type);
 
     if (data) {
       const categoriesData =
         type === 'expense' ? data.expenseCategories : data.incomeCategories;
 
       setCategories(categoriesData);
+
+      if (transaction) {
+        setTimeout(() => {
+          form.setValue('category', transaction.category.id);
+        });
+      }
     }
-  }, [type, getCategoriesQuery.data]);
+  }, [type, getCategoriesQuery.data, transaction]);
 
   async function onSubmit(values: FormValues) {
     if (!user) return;
@@ -182,7 +209,11 @@ function NewTransactionForm({ onClose }: { onClose: () => void }) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Categoría</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                value={field.value}
+              >
                 <FormControl className='w-full'>
                   <SelectTrigger>
                     <SelectValue placeholder='Selecciona una categoría' />

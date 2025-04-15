@@ -15,6 +15,7 @@ export interface TransactionResponse {
   amount: number;
   type: TransactionType;
   categories: {
+    id: string;
     name: string;
     icon: string;
   };

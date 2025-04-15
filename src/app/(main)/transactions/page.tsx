@@ -1,4 +1,5 @@
 'use client';
+import DrawerDialog from '@/app/components/DrawerDialog';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -11,15 +12,21 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Period } from '@/core/actions/dashboard/get-balance';
 import { useTransaction } from '@/hooks/transaction/useTransaction';
+import { Transaction } from '@/infraestructure/interfaces/transaction/transaction.interface';
 import { formatWithLocale } from '@/lib/date';
 import { cn } from '@/lib/utils';
-import { ArrowUpDown } from 'lucide-react';
+import { format, set } from 'date-fns';
+import { ArrowUpDown, LucideEdit, LucideTrash } from 'lucide-react';
 import { useState } from 'react';
 import DateRangeFilter, { DateRange } from '../../components/DateRangeFilter';
-import { format } from 'date-fns';
+import NewTransactionForm from '../dashboard/NewTransactionForm';
 
 const Transactions = () => {
   const [period, setPeriod] = useState<Period | undefined>('current-month');
+  const [isOpen, setIsOpen] = useState(false);
+  const [transactionSelected, setTransactionSelected] = useState<
+    Transaction | undefined
+  >();
   const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
     const today = new Date();
     return {
@@ -112,6 +119,7 @@ const Transactions = () => {
               <TableHead className='font-medium'>Categoría</TableHead>
               <TableHead className='font-medium'>Fecha</TableHead>
               <TableHead className='font-medium text-right'>Monto</TableHead>
+              <TableHead className='font-medium text-right'>Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -167,11 +175,42 @@ const Transactions = () => {
                     {transaction.type === 'income' ? '+ ' : '- '}$
                     {transaction.amount.toFixed(2)}
                   </TableCell>
+                  <TableCell className='text-right'>
+                    <Button
+                      variant='ghost'
+                      size='icon'
+                      onClick={() => {
+                        setTransactionSelected({ ...transaction });
+                        setIsOpen(true);
+                      }}
+                    >
+                      <LucideEdit className='h-4 w-4' />
+                    </Button>
+
+                    <Button variant='ghost' size='icon' onClick={() => {}}>
+                      <LucideTrash className='h-4 w-4' />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))
             )}
           </TableBody>
         </Table>
+
+        <DrawerDialog
+          title='Editar Transacción'
+          description='Modifica una transacción en tu billetera'
+          open={isOpen}
+          setOpen={setIsOpen}
+        >
+          <NewTransactionForm
+            transaction={transactionSelected}
+            onClose={() => {
+              setIsOpen(false);
+              setTransactionSelected(undefined);
+            }}
+          />
+        </DrawerDialog>
       </div>
     </div>
   );

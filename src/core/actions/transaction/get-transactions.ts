@@ -18,6 +18,7 @@ export const getTransactions = async (
         `
         *,
         categories (
+          id,
           name,
           icon
         )

@@ -1,7 +1,4 @@
-import {
-  Category,
-  CategoryWithId,
-} from '@/infraestructure/interfaces/category/category.interface';
+import { CategoryWithId } from '@/infraestructure/interfaces/category/category.interface';
 import { supabase } from '@/lib/db';
 
 export const updateCategory = async (

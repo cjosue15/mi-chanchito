@@ -23,9 +23,9 @@ import { PropsWithChildren, ReactNode } from 'react';
 interface DrawerDialogProps extends PropsWithChildren {
   title: string;
   description: string;
-  trigger: ReactNode;
   open: boolean;
   setOpen: (open: boolean) => void;
+  trigger?: ReactNode;
   className?: string;
 }
 
@@ -33,10 +33,10 @@ function DrawerDialog({
   children,
   title,
   description,
-  trigger,
   open,
   setOpen,
   className,
+  trigger,
 }: DrawerDialogProps) {
   const isMobile = useIsMobile();
 

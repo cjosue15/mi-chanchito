@@ -5,6 +5,7 @@ export interface Transaction {
   category: {
     name: string;
     icon: string;
+    id: string;
   };
   amount: number;
   type: TransactionType;
