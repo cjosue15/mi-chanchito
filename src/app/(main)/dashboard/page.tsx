@@ -9,7 +9,7 @@ import { useIsMobile } from '@/hooks/useMobile';
 import { format } from 'date-fns';
 import { LucidePlus, TrendingDown, TrendingUp, Wallet } from 'lucide-react';
 import { useState } from 'react';
-import DateRangeFilter, { DateRange } from './DateRangeFilter';
+import DateRangeFilter, { DateRange } from '../../components/DateRangeFilter';
 import ExpensePieChart from './ExpensePieChart';
 import NewTransactionForm from './NewTransactionForm';
 import StatCard from './StatCard';
