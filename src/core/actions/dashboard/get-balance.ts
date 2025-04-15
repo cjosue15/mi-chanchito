@@ -1,5 +1,5 @@
+import { getUTCStartAndEnd } from '@/lib/date';
 import { supabase } from '@/lib/db';
-import { toZonedTime } from 'date-fns-tz';
 
 export type Period =
   | 'current-month'
@@ -14,13 +14,9 @@ export const getBalance = async (
   end: string
   // period?: Period
 ) => {
-  const from = `${start}T00:00:00.000`;
-  const to = `${end}T23:59:59.99`;
+  const { startUtc, endUtc } = getUTCStartAndEnd(start, end);
   // let prevStart = '';
   // let prevEnd = '';
-
-  const startUtc = toZonedTime(from, 'America/Lima').toISOString();
-  const endUtc = toZonedTime(to, 'America/Lima').toISOString();
 
   // if (period === 'custom') {
   //   const date = getPreviousRangeFromDateRange(

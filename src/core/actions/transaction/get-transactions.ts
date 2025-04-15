@@ -1,8 +1,8 @@
 import { Transaction } from '@/infraestructure/interfaces/transaction/transaction.interface';
 import { TransactionResponse } from '@/infraestructure/interfaces/transaction/transaction.response';
 import { TransactionMapper } from '@/infraestructure/mappers/transaction.mapper';
+import { getUTCStartAndEnd } from '@/lib/date';
 import { supabase } from '@/lib/db';
-import { toZonedTime } from 'date-fns-tz';
 
 export const getTransactions = async (
   userId: string,
@@ -10,11 +10,7 @@ export const getTransactions = async (
   end: string
 ): Promise<Transaction[]> => {
   try {
-    const from = `${start}T00:00:00.000`;
-    const to = `${end}T23:59:59.99`;
-
-    const startUtc = toZonedTime(from, 'America/Lima').toISOString();
-    const endUtc = toZonedTime(to, 'America/Lima').toISOString();
+    const { startUtc, endUtc } = getUTCStartAndEnd(start, end);
 
     const { data, error } = await supabase
       .from('transactions')

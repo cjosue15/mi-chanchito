@@ -11,3 +11,8 @@ export interface Transaction {
   date: string;
   note: string;
 }
+
+export interface DailyExpense {
+  day: string;
+  total: number;
+}
