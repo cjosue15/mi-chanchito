@@ -1,12 +1,12 @@
 import { createTransaction } from '@/core/actions/transaction/add-transaction';
 import { getTransactions } from '@/core/actions/transaction/get-transactions';
 import { useAuthContext } from '@/providers/AuthProvider';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useDashboard } from '../dashboard/useDashboard';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useTransaction = (start?: string, end?: string) => {
+  const queryClient = useQueryClient();
+
   const { user } = useAuthContext();
-  const { getBalanceQuery, getExpenseCategoriesQuery } = useDashboard();
 
   const getTransactionsQuery = useQuery({
     queryKey: ['transactions', user!.id, start, end],
@@ -17,10 +17,25 @@ export const useTransaction = (start?: string, end?: string) => {
 
   const createTransactionMutation = useMutation({
     mutationFn: createTransaction,
-    onSuccess: () => {
+    onSuccess: async () => {
       getTransactionsQuery.refetch();
-      getBalanceQuery.refetch();
-      getExpenseCategoriesQuery.refetch();
+      console.log({
+        start,
+        end,
+        user: user!.id,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['balance'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['expense-categories'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['daily-expenses'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['transactions'],
+      });
     },
   });
 
