@@ -56,9 +56,11 @@ function NewTransactionForm({
 }) {
   const { user } = useAuthContext();
   const { getCategoriesQuery } = useCategory();
-  const { createTransactionMutation } = useTransaction();
+  const { createTransactionMutation, updateTransactionMutation } =
+    useTransaction();
 
-  const isPending = createTransactionMutation.isPending;
+  const isPending =
+    createTransactionMutation.isPending || updateTransactionMutation.isPending;
 
   const [categories, setCategories] = useState<CategoryWithId[]>([]);
 
@@ -110,19 +112,36 @@ function NewTransactionForm({
     if (!user) return;
 
     try {
-      await createTransactionMutation.mutateAsync({
-        user_id: user?.id,
-        category_id: values.category,
-        amount: values.amount,
-        type: values.type,
-        date: values.date,
-        note: values.title,
-      });
+      if (transaction) {
+        await updateTransactionMutation.mutateAsync({
+          id: transaction.id,
+          user_id: user?.id,
+          category_id: values.category,
+          amount: values.amount,
+          type: values.type,
+          date: values.date,
+          note: values.title,
+        });
+      } else {
+        await createTransactionMutation.mutateAsync({
+          user_id: user?.id,
+          category_id: values.category,
+          amount: values.amount,
+          type: values.type,
+          date: values.date,
+          note: values.title,
+        });
+      }
+
       form.reset();
       onClose();
-      toast.success('Transacción creada con éxito');
+      toast.success(
+        `Transacción ${transaction ? 'actualizada' : 'creada'} con éxito`
+      );
     } catch (error) {
-      toast.error('Error al crear la transacción');
+      toast.error(
+        `Error al ${transaction ? 'actualizar' : 'crear'} la transacción`
+      );
     }
   }
 
@@ -253,8 +272,8 @@ function NewTransactionForm({
           className='w-full rounded-xl py-6'
           disabled={isPending}
         >
-          {isPending && <Loader size={16} className='animate-spin' />} Guardar
-          Transacción
+          {isPending && <Loader size={16} className='animate-spin' />}{' '}
+          {transaction ? 'Actualizar Transacción' : 'Guardar Transacción'}
         </Button>
       </form>
     </Form>

@@ -20,6 +20,8 @@ import { ArrowUpDown, LucideEdit, LucideTrash } from 'lucide-react';
 import { useState } from 'react';
 import DateRangeFilter, { DateRange } from '../../components/DateRangeFilter';
 import NewTransactionForm from '../dashboard/NewTransactionForm';
+import { TransactionAlert } from './TransactionAlert';
+import { toast } from 'sonner';
 
 const Transactions = () => {
   const [period, setPeriod] = useState<Period | undefined>('current-month');
@@ -42,7 +44,10 @@ const Transactions = () => {
   const to =
     dateRange && dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined;
 
-  const { getTransactionsQuery } = useTransaction(from, to);
+  const { getTransactionsQuery, deleteTransactionMutation } = useTransaction(
+    from,
+    to
+  );
 
   const [activeTab, setActiveTab] = useState('all');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
@@ -68,6 +73,15 @@ const Transactions = () => {
     const dateB = new Date(b.date).getTime();
     return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
   });
+
+  const handleDeleteTransaction = async (id: string) => {
+    try {
+      await deleteTransactionMutation.mutateAsync(id);
+      toast.success('Transacción eliminada correctamente');
+    } catch {
+      toast.error('Error al eliminar la transacción');
+    }
+  };
 
   return (
     <div className='w-full overflow-auto'>
@@ -187,9 +201,9 @@ const Transactions = () => {
                       <LucideEdit className='h-4 w-4' />
                     </Button>
 
-                    <Button variant='ghost' size='icon' onClick={() => {}}>
-                      <LucideTrash className='h-4 w-4' />
-                    </Button>
+                    <TransactionAlert
+                      onDelete={() => handleDeleteTransaction(transaction.id)}
+                    />
                   </TableCell>
                 </TableRow>
               ))
